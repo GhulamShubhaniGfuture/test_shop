@@ -43,19 +43,18 @@ export const storeProduct = async (req: Request, res: Response, next: NextFuncti
         return res.status(404).json({ message: "Product not found" });
       }
   
-      const transaction:any = await provider.getTransaction(transactionHash);
-      console.log(transaction.to,transaction.from,transaction.value,"transaction");
+      if(product.isSold !== false) {
+        return res.status(400).json({ message: "Product sold!" });
+      }
       
+      const transaction:any = await provider.getTransaction(transactionHash);
       if (!transaction) {  
         return res.status(400).json({ message: "Invalid transaction hash or transaction not found" });
       }
   
       if (!transaction.to || !transaction.from || !transaction.value) {
         return res.status(400).json({ message: "Transaction data missing or malformed" });
-      }
-
-      console.log("expectedPrice");
-      
+      }      
   
       const merchantWallet = process.env.MERCHANT_WALLET_ADDRESS as string; 
       const expectedPrice = ethers.parseEther(product.price.toString()).toString(); 
@@ -70,7 +69,6 @@ export const storeProduct = async (req: Request, res: Response, next: NextFuncti
         return res.status(400).json({ message: "Transaction verification failed. Data mismatch!" });
       }
       
-  
       product.transactionHash = transactionHash;
       product.isSold = true;
       await product.save();
