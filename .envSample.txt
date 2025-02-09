@@ -1,0 +1,10 @@
+PORT=5000
+MONGO_URI=mongodb+srv://yourId:Password@cluster0.m5pkf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+EMAIL_ID='ghulam.shubhani0@gmail.com'
+EMAIL_PASSWORD='password'
+EMAIL_PASSWORD='password'
+MERCHANT_WALLET_ADDRESS=0xf35C3030F65297aCCc3Fee4e2CA548EC99D277B5
+JWT_SECRET_KEY='yorkey'
+JWT_ACCESS_TOKEN_EXPIRY='1d'
+REFRESH_TOKEN_SECRET='yorkey'
+REFRESH_TOKEN_EXPIRY='30d'
