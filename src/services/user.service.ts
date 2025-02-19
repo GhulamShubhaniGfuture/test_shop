@@ -61,4 +61,20 @@ export const createUser = async (userData: IUser) => {
     }
     return data;
   };
+
+export const userDetails = async (userId: string,userType:string) => {
+    try {
+      if (userId) {
+        const user = await UserModel.findOne({ _id:userId, isDeleted: false }).select('-password -refreshToken -__v');
+        console.log(user);
+        
+        if (!user) {
+          throw new ApiError(404, "User not found");
+        } 
+        return user;
+      }
+    } catch (error:any) {
+      throw new ApiError(500,error.message);
+    }
+};
   

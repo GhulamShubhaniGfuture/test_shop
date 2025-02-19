@@ -73,40 +73,45 @@ try {
 
 export const userLogin = asyncMiddleware(async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { email, password,userId } = req.body;
-        if(!(email || userId)){
-            throw new ApiError(400,USER_MESSAGES.MISSING_EMAIL);
-        }
-        if(!password){
-            throw new ApiError(400,USER_MESSAGES.MISSING_PASSWORD);
-        }
-        const isValidUser = await UserModel.findOne({$or:[{email},{userId}]});
-        if(!isValidUser){
-            throw new ApiError(404,USER_MESSAGES.NOT_FOUND);
-        }
-        const isMatch = await isValidUser.isPasswordCorrect(password as string);
-        if(!isMatch){
-            throw new ApiError(400,USER_MESSAGES.NOT_FOUND);
-        }
-        const {accessToken,refreshToken} = await generateAccessRefreshToken(isValidUser?._id as string);
+        const { email, password, userId } = req.body;
 
-        let loginUser:any = await UserModel.findOne({_id:isValidUser?._id}).select("-password -refreshToken");
+        if (!(email || userId)) {
+            throw new ApiError(400, USER_MESSAGES.MISSING_EMAIL);
+        }
+        if (!password) {
+            throw new ApiError(400, USER_MESSAGES.MISSING_PASSWORD);
+        }
+
+        const isValidUser = await UserModel.findOne({ $or: [{ email }, { userId }] });
+
+        if (!isValidUser) {
+            throw new ApiError(404, USER_MESSAGES.NOT_FOUND);
+        }
+
+        const isMatch = await isValidUser.isPasswordCorrect(password as string);
+        if (!isMatch) {
+            throw new ApiError(400, USER_MESSAGES.NOT_FOUND);
+        }
+
+        const { accessToken, refreshToken } = await generateAccessRefreshToken(isValidUser._id as string);
+
+        let loginUser:any = await UserModel.findOne({ _id: isValidUser._id }).select("-password -refreshToken");
         if (loginUser) {
+            loginUser = loginUser.toObject(); 
             loginUser.accessToken = accessToken;
         }
 
-        res.status(200).cookie("accessToken", accessToken,options).cookie("refreshToken", refreshToken,options).json(new ApiResponse(200,loginUser,"successFullyAuthenticated"));
+        return res
+            .status(200)
+            .cookie("accessToken", accessToken, options)
+            .cookie("refreshToken", refreshToken, options)
+            .json(new ApiResponse(200, loginUser, "successFullyAuthenticated"));
 
-        res.cookie
-        res.status(STATUS_CODES.SUCCESS).send({
-            status: STATUS_CODES.SUCCESS,
-            message: MESSAGES.LOGIN_SUCCESS,
-          });
-    } catch (error:any) {   
+    } catch (error: any) {
         const code = error?.statusCode || STATUS_CODES.INTERNAL_SERVER_ERROR;
         const message = error?.message || MESSAGES.ERROR;
-        res.status(code).json({ message });    
-    }    
+        return res.status(code).json({ message });    
+    }
 });
 
 export const userLogout = asyncMiddleware(async (req: Request, res: Response, next: NextFunction) => {

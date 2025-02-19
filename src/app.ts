@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import errorHandler from "./middleware/errorHandler";
 import { router } from "@src/routes/index";
+import cookieParser from "cookie-parser";
 // import { productMailRouter } from '@src/routes/productMail.routes';
 
 dotenv.config();
@@ -25,6 +26,8 @@ app.use(cors());
 //   })
 // );
 app.use(express.json());
+app.use(cookieParser())
+
 app.use(express.urlencoded({ limit: "50mb",extended: true }));
 
 
