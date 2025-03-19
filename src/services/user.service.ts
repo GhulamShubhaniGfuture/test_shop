@@ -62,10 +62,44 @@ export const createUser = async (userData: IUser) => {
     return data;
   };
 
-export const userDetails = async (userId: string,userType:string) => {
+export const userDetails = async (id:string|undefined,userId: string|undefined,userType:string) => {
     try {
+      console.log(userId,"userId");
+      
       if (userId) {
-        const user = await UserModel.findOne({ _id:userId, isDeleted: false }).select('-password -refreshToken -__v');
+
+        // const user = await UserModel.findOne({ _id:userId, isDeleted: false }).select('-password -refreshToken -__v');
+        const user  = await UserModel.aggregate([
+          {
+            $match:{
+              userId: userId,
+              isDeleted: false,
+              userType: userType
+            },
+           
+          },{
+            $project:{
+              _id: 0,
+              userId: 1,
+              firstName: 1,
+              lastName: 1,
+              email: 1,
+              mobileNumber: 1,
+              avatar: 1,
+              coverPhoto: 1,
+              // isEmailVerified: 1,
+              // isPhoneVerified: 1,
+              profile: 1,
+              userType: 1,
+              country: 1,
+              createdAt: 1,
+              updatedAt: 1,
+              lastLogin: 1,
+              isBlock: 1,
+              isDeleted: 1
+            }
+          }
+        ]);
         console.log(user);
         
         if (!user) {

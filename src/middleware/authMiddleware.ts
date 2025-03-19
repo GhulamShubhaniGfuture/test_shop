@@ -20,9 +20,13 @@ export const authMiddleware = asyncMiddleware(async (req, res, next) => {
         if (error) {
           return res.status(403).json(new ApiError(400, "Invalid token"));
         }
+        console.log(decoded,"decoded",decoded.data.userId);
         
         req.user = decoded.data;
-        req.userId = decoded.data._id;
+        req._id = decoded.data._id;
+        req.userType = decoded.data.userType;
+        req.userId = decoded.data.userId;
+        // req.userId = decoded.data.userId;
         // console.log(req.user, "req.user");
       }
     );

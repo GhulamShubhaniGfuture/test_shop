@@ -9,6 +9,8 @@ db();
 declare global{
     namespace Express {
         interface Request {
+            _id?: string;
+            userType?: string;
             user?: any;
             userId?:string;
             userRole?:string;

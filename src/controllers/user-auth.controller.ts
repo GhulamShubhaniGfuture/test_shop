@@ -101,6 +101,8 @@ export const userLogin = asyncMiddleware(async (req: Request, res: Response, nex
             loginUser.accessToken = accessToken;
         }
 
+        const data=loginUser.data
+
         return res
             .status(200)
             .cookie("accessToken", accessToken, options)
