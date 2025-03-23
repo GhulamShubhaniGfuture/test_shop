@@ -10,7 +10,7 @@ const UserSchema: Schema = new Schema<IUser>({
   lastName: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  fiewbaseUid: { type: String },
+  firebaseUID: { type: String },
   profile: { type: String },
   googleId: { type: String },
   mobileNumber: { type: String },

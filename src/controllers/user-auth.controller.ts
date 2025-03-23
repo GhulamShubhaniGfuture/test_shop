@@ -55,7 +55,7 @@ try {
             code:countryCode
         },
         ...req.body,
-        fiewbaseUid:firebaseDetails.uid,
+        firebaseUID:firebaseDetails.uid,
         createdAt: Date.now()
     } as IUser);
 

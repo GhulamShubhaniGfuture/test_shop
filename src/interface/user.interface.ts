@@ -6,7 +6,7 @@ export interface IUser extends Document {
   lastName: string;
   email: string;
   password: string;
-  fiewbaseUid?: string;
+  firebaseUID?: string;
   profile?: string;
   googleId?: string;
   mobileNumber?: string;
